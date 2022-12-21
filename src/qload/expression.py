@@ -23,10 +23,10 @@ def re_find_all(content: str, expression: str, flags: int = 0) -> Union[None, st
         return match
 
 
-def jmespath_find_all(content: dict, expression: str) -> Union[None, str, list, dict]:
+def jmespath_find_all(content: Union[dict, list], expression: str) -> Union[None, str, list, dict]:
     """
 
-    >>> expression.jmespath_find_all([{'hello', 'world'}], expression='[0]')
+    >>> jmespath_find_all([{'hello', 'world'}], expression='[0]')
 
     :param content:
     :param expression:

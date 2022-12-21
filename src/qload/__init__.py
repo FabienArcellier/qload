@@ -1,12 +1,33 @@
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Callable
 
 from qload.driver import file, ftp
 
 
+def csv(path: str, expression: Optional[str] = None, **kwargs) ->  Union[None, str, list, dict]:
+    """
+    loads the content of a csv file and can filter it using jmespath expression to
+    to make error display more explicit on the assertion.
+
+    csv uses the csv.DictReader reader to parse and read the contents of the csv file
+    into a dictionary list.
+
+    >>> import qload
+    >>>
+    >>> assert qload.csv('/home/fabien/file.csv') == [{'account': 'BLD'}, {'account': 'ALK'}]
+    >>> assert qload.csv('/home/fabien/file.csv', fieldnames = []) == [{'hello': 'world'}]
+    >>> assert qload.csv('/home/fabien/file.csv', delimiter=';') == [{'account': 'BLD'}, {'account': 'ALK'}]
+
+    :param path:
+    :param expression: jmespath expression
+    :return:
+    """
+    return file().csv(path=path, expression=expression, **kwargs)
+
+
 def json(path: str, expression: Optional[str] = None) ->  Union[None, str, list, dict]:
     """
-    loads part of a json file and can filter it from a jmespath expression
-    to make the assertion error display more explicit
+    loads the content of a json file and can filter it using jmespath expression
+    to make error display more explicit on the assertion
 
     >>> import qload
     >>> assert qload.json('/home/fabien/file.json') == [{'hello': 'world'}]
@@ -37,7 +58,7 @@ def text(path: str, expression: Optional[str] = None, flags: int = 0) -> Union[s
     return file().text(path=path, expression=expression, flags=flags)
 
 
-def yaml(path: str, expression: Optional[str] = None) ->  Union[None, str, list, dict]:
+def yaml(path: str, expression: Optional[str] = None, Loader: Optional[Callable] = None) ->  Union[None, str, list, dict]:
     """
     loads part of a yaml file and can filter it from a jmespath expression
     to make the assertion error display more explicit
@@ -50,4 +71,4 @@ def yaml(path: str, expression: Optional[str] = None) ->  Union[None, str, list,
     :param expression: jmespath expression
     :return:
     """
-    return file().yaml(path=path, expression=expression)
+    return file().yaml(path=path, expression=expression, Loader=Loader)

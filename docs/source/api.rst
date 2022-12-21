@@ -6,9 +6,11 @@ API Reference
 qload
 =====
 
-.. autofunction:: text
+.. autofunction:: csv
 
 .. autofunction:: json
+
+.. autofunction:: text
 
 .. autofunction:: yaml
 

@@ -4,6 +4,16 @@ import qload
 import fixtup
 
 
+def test_csv_should_load_file_content():
+    with fixtup.up('files'):
+        assert len(qload.csv('file.csv')) == 3
+
+
+def test_csv_should_load_file_content_and_filter_by_expression():
+    with fixtup.up('files'):
+        assert qload.csv('file.csv', expression='[*].Account') == ['ALK', 'BTL', 'CKL']
+
+
 def test_ftp_should_load_file_content_and_perform_expression_filter():
     with fixtup.up('ftp'):
         assert qload.ftp(user='admin', passwd='admin').text('file.txt', expression='Hello .*') == 'Hello fabien'

@@ -1,3 +1,4 @@
+import csv
 import io
 import json
 import typing
@@ -20,6 +21,20 @@ class QloadEngine:
 
     def __init__(self, driver: 'QloadDriver' = None):
         self.driver = driver
+
+    def csv(self, path: str, expression: Optional[str] = None, **kwargs) ->  Union[None, str, list, dict]:
+        local_path = self.driver.download(path=path)
+        content = []
+        with io.open(local_path) as fp:
+            reader = csv.DictReader(fp, **kwargs)
+            for item in reader:
+                content.append(item)
+
+        if expression is None:
+            return content
+
+        result = _expression.jmespath_find_all(content, expression)
+        return result
 
     def json(self, path: str, expression: Optional[str] = None) -> Union[dict, list]:
         local_path = self.driver.download(path=path)
