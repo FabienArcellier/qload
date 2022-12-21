@@ -1,6 +1,6 @@
 from typing import Optional, List, Union, Callable
 
-from qload.driver import file, ftp
+from qload.driver import file, ftp, s3
 
 
 def csv(path: str, expression: Optional[str] = None, **kwargs) ->  Union[None, str, list, dict]:

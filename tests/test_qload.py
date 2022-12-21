@@ -39,6 +39,11 @@ def test_json_should_load_text_and_trigger_exception():
             pass
 
 
+def test_s3_should_load_json_file_from_s3_bucket():
+    with fixtup.up('s3'):
+        assert [{'hello': 'world'}] == qload.s3(bucket='bucket', endpoint_url='http://localhost:9090').json('file.json')
+
+
 def test_text_should_load_text_and_match_content():
     with fixtup.up('files'):
         dir = os.getcwd()

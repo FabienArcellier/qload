@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  s3:
+    image: adobe/s3mock
+    ports:
+      - 9090:9090
+    environment:
+      - initialBuckets=bucket
+      - root=/data
+      - retainFilesOnExit=true
+    volumes:
+      - ./data:/data/bucket:cached

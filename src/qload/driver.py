@@ -1,18 +1,19 @@
 import tempfile
 from typing import Optional
 
+import boto3
 import ftputil
 
 from qload.base import QloadEngine
 from qload.exception import InvalidRemoteFile
 
 
-def file():
+def file() -> QloadEngine:
     driver = QloadDriverFile()
     return QloadEngine(driver)
 
 
-def ftp(host: str = 'localhost', user: Optional[str] = None, passwd: Optional[str] = None, **kwargs):
+def ftp(host: str = 'localhost', user: Optional[str] = None, passwd: Optional[str] = None, **kwargs) -> QloadEngine:
     """
 
     :param host:
@@ -26,6 +27,17 @@ def ftp(host: str = 'localhost', user: Optional[str] = None, passwd: Optional[st
     :return:
     """
     driver = QloadDriverFtp(host=host, user=user, passwd=passwd, **kwargs)
+    return QloadEngine(driver)
+
+
+def s3(bucket: str, endpoint_url: Optional[str] = None, region_name: Optional[str] = None, aws_access_key_id: Optional[str] = None, aws_secret_access_key: Optional[str] =  None, **kwargs) -> QloadEngine:
+    """
+
+    :param bucket: bucket name of s3
+    :param kwargs:
+    :return:
+    """
+    driver = QloadDriverS3(bucket, endpoint_url, region_name, aws_access_key_id, aws_secret_access_key, **kwargs)
     return QloadEngine(driver)
 
 
@@ -89,4 +101,52 @@ class QloadDriverFtp(QloadDriver):
                 return filepath
 
         raise InvalidRemoteFile(path)
+
+
+class QloadDriverS3(QloadDriver):
+
+    def __init__(self, bucket: str, endpoint_url: Optional[str] = None, region_name: Optional[str] = None, aws_access_key_id: Optional[str] = None, aws_secret_access_key: Optional[str] =  None, **kwargs):
+        """
+
+        :param bucket:
+        :param endpoint_url: The complete URL to use for the constructed client. Normally, botocore will automatically construct the appropriate URL to use when communicating with a service.
+        :param region_name: The name of the region associated with the client. A client is associated with a single region.
+        :param aws_access_key_id: The access key to use when creating the client. This is entirely optional, and if not provided, the credentials configured for the session will automatically be used. You only need to provide this argument if you want to override the credentials used for this specific client.
+        :param aws_secret_access_key: The secret key to use when creating the client. Same semantics as aws_access_key_id above.
+        :param kwargs: other arguments allowed s3.client (see https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html)
+        """
+        self.bucket = bucket
+        if endpoint_url is not None:
+            kwargs['endpoint_url'] = endpoint_url
+
+        if region_name is not None:
+            kwargs['region_name'] = region_name
+
+        if aws_access_key_id is not None:
+            kwargs['aws_access_key_id'] = aws_access_key_id
+
+        if aws_secret_access_key is not None:
+            kwargs['aws_secret_access_key'] = aws_secret_access_key
+
+        self.kwargs = kwargs
+
+    def download(self, path: str) -> Optional[str]:
+        """
+        QloadDriver3 loads a file from a s3 bucket into the system temporary files and
+        returns the path to the downloaded file.
+
+        :param path: s3 key of the file on the s3 bucket
+        :return:
+        """
+        from botocore.errorfactory import ClientError
+
+        client = boto3.client('s3', **self.kwargs)
+        _, filepath = tempfile.mkstemp()
+        try:
+            client.head_object(Bucket=self.bucket, Key=path)
+        except ClientError:
+            raise InvalidRemoteFile(path)
+
+        client.download_file(Bucket=self.bucket, Key=path, Filename=filepath)
+        return filepath
 

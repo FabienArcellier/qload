@@ -16,6 +16,7 @@ jsonpath-ng = "^1.5.3"
 jmespath = "^1.0.1"
 pyyaml = "^6.0"
 ftputil = "^5.0.4"
+boto3 = "^1.26.34"
 
 
 [tool.poetry.group.dev.dependencies]
