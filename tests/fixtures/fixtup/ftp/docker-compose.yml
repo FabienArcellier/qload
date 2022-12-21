@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  ftp:
+    image: fauria/vsftpd
+    init: true
+    ports:
+      - 0.0.0.0:20:20
+      - 0.0.0.0:21:21
+      - 0.0.0.0:21100-21110:21100-21110
+    environment:
+      - FTP_USER=admin
+      - FTP_PASS=admin
+      - PASV_ADDRESS=localhost
+      - PASV_ADDR_RESOLVE=YES
+    volumes:
+      - ./file.txt:/home/vsftpd/admin/file.txt
