@@ -2,15 +2,16 @@ qload : better assertion on files
 =================================
 
 qload is a library to load or extract content of a file to perform assertion in automatic tests without
-boilerplate. qload peut charger un fichier en local ou depuis des stockages distants comme s3 ou du ftp.
+boilerplate. qload can load a file locally or from remote storages like s3 or ftp.
 
 Benefits
 ########
 
 * oneliner to assert on the content of a file
 * useful differential when the test fails
-* support for the most common formats (yaml, csv, json, txt, ...)
-* support for multiple file systems and protocols (local, ftp, s3, ...)
+* support for the most common formats (yaml, csv, json, txt)
+* support for multiple file systems and protocols (local, ftp, s3)
+* rich expression engine to extract part of a file (`regexp <https://docs.python.org/3/library/re.html#regular-expression-syntax>`_ for `text` and `jmespath <https://jmespath.org/>`_ for `csv`, `json` and `yaml`)
 
 Usage
 #####

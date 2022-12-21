@@ -9,6 +9,8 @@ packages = [
     { include = "qload", from = "src" },
 ]
 
+[tool.poetry.urls]
+"Source" = "https://github.com/FabienArcellier/qload"
 
 [tool.poetry.dependencies]
 python = "^3.8"
