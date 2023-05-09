@@ -51,6 +51,18 @@ class QloadEngine:
             result = _expression.jmespath_find_all(content, expression)
             return result
 
+    def parquet(self, path: str, expression: Optional[str] = None, **kwargs) ->  Union[None, str, list, dict]:
+        local_path = self.driver.download(path=path)
+        from pandas import read_parquet
+
+        df = read_parquet(local_path)
+        content = df.to_dict('records')
+        if expression is None:
+            return content
+
+        result = _expression.jmespath_find_all(content, expression)
+        return result
+
     def text(self, path: str, expression: Optional[str] = None, flags: int = 0) -> str:
         """
 

@@ -33,7 +33,10 @@ assert len(qload.json('file.json', expression='$.id')) == 4
 assert qload.yaml('file.yml')  == {}
 assert qload.yaml('file.yml', expression='$.id')  == ''
 
-assert qload.csv('file.csv', expression='$.id') == ''
+assert qload.csv('file.csv', expression='[*].Account') == ['ALK', 'BTL', 'CKL']
+assert qload.csv('file.csv', expression='[*].Account')[0] == 'ALK'
+
+assert qload.parquet('file.parquet', expression='[*].Account')[0] == 'ALK'
 
 assert qload.ftp(host='localhost', port=21, login='admin', password='admin').csv(path='dir/file.csv', expression='') == []
 assert qload.s3(bucket='bucket', aws_access_key_id='', aws_secret_access_key='', region_name='eu-west-1', endpoint_url='http://localhost:9090').json(path='dir/file.csv') == {}
