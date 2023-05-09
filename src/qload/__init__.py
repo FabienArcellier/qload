@@ -44,6 +44,17 @@ def json(path: str, expression: Optional[str] = None) ->  Union[None, str, list,
     return file().json(path=path, expression=expression)
 
 
+def parquet(path:str, expression: Optional[str] = None) -> Union[None, str, list, dict]:
+    """
+    loads the content of a parquet file and can filter it using jmespath expression to
+    to make error display more explicit on the assertion.
+
+    pandas uses the pandas reader & pyarrow to parse and read the contents of the parquet file
+    into a dictionary list.
+    """
+    return file().parquet(path=path, expression=expression)
+
+
 def text(path: str, expression: Optional[str] = None, flags: int = 0) -> Union[str, List[str]]:
     """
     loads text from a file and can filter it through a regular expression

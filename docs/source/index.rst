@@ -31,8 +31,10 @@ Usage
     assert qload.yaml('file.yml')  == {}
     assert qload.yaml('file.yml', expression='$.id')  == ''
 
-    assert qload.csv('file.csv', expression='$.id') == ''
-    assert qload.csv('file.csv', expression='$.id') == ''
+    assert qload.csv('file.csv', expression='[*].Account') == ['ALK', 'BTL', 'CKL']
+    assert qload.csv('file.csv', expression='[*].Account')[0] == 'ALK'
+
+    assert qload.parquet('file.parquet', expression='[*].Account')[0] == 'ALK'
 
     assert qload.ftp(host='localhost', port=21, login='admin', password='admin').csv(path='dir/file.csv', expression='') == ''
     assert qload.s3(bucket='bucket1', access_key=access_key, access_secret=access_secret, endpoint='localhost').json(path='dir/file.csv', expression='') == ''

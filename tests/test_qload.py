@@ -14,6 +14,11 @@ def test_csv_should_load_file_content_and_filter_by_expression():
         assert qload.csv('file.csv', expression='[*].Account') == ['ALK', 'BTL', 'CKL']
 
 
+def test_parquet_should_load_file_content_and_filter_by_expression():
+    with fixtup.up('files'):
+        assert qload.parquet('file.parquet', expression='[*].Account') == ['ALK', 'BTL', 'CKL']
+
+
 def test_ftp_should_load_file_content_and_perform_expression_filter():
     with fixtup.up('ftp'):
         assert qload.ftp(user='admin', passwd='admin').text('file.txt', expression='Hello .*') == 'Hello fabien'
