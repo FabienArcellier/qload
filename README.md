@@ -38,4 +38,7 @@ assert qload.csv('file.csv', expression='$.id') == ''
 assert qload.ftp(host='localhost', port=21, login='admin', password='admin').csv(path='dir/file.csv', expression='') == []
 assert qload.s3(bucket='bucket', aws_access_key_id='', aws_secret_access_key='', region_name='eu-west-1', endpoint_url='http://localhost:9090').json(path='dir/file.csv') == {}
 
+
+assert qload.isfile('file.json') is True
+assert qload.s3(bucket='bucket').isfile('file.json') is True
 ```

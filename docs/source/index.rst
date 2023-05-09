@@ -37,6 +37,9 @@ Usage
     assert qload.ftp(host='localhost', port=21, login='admin', password='admin').csv(path='dir/file.csv', expression='') == ''
     assert qload.s3(bucket='bucket1', access_key=access_key, access_secret=access_secret, endpoint='localhost').json(path='dir/file.csv', expression='') == ''
 
+    assert qload.isfile('file.json') is True
+    assert qload.s3(bucket='bucket').isfile('file.json') is True
+
 Installation
 ############
 

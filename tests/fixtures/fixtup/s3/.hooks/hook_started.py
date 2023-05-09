@@ -7,6 +7,11 @@
 #  * check if a database in postgresql is up and mounted
 #
 
+import boto3
 import fixtup.helper
 
 fixtup.helper.wait_port(9090, timeout=5000)
+
+s3 = boto3.client('s3', endpoint_url='http://localhost:9090')
+s3.upload_file('file.json', 'bucket', 'file.json')
+

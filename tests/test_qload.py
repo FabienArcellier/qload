@@ -44,6 +44,16 @@ def test_s3_should_load_json_file_from_s3_bucket():
         assert [{'hello': 'world'}] == qload.s3(bucket='bucket', endpoint_url='http://localhost:9090').json('file.json')
 
 
+def test_s3_should_isfile_check_file_is_on_s3_bucket():
+    with fixtup.up('s3'):
+        assert qload.s3(bucket='bucket', endpoint_url='http://localhost:9090').isfile('file.json') is True
+
+
+def test_s3_should_isfile_returns_file_is_missing():
+    with fixtup.up('s3'):
+        assert qload.s3(bucket='bucket', endpoint_url='http://localhost:9090').isfile('any.yolo') is False
+
+
 def test_text_should_load_text_and_match_content():
     with fixtup.up('files'):
         dir = os.getcwd()
