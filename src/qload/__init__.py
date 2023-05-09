@@ -3,6 +3,10 @@ from typing import Optional, List, Union, Callable
 from qload.driver import file, ftp, s3
 
 
+def isfile(path: str, **kwargs) -> bool:
+    return file().isfile(path=path, **kwargs)
+
+
 def csv(path: str, expression: Optional[str] = None, **kwargs) ->  Union[None, str, list, dict]:
     """
     loads the content of a csv file and can filter it using jmespath expression to

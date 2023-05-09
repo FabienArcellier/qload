@@ -1,3 +1,4 @@
+import os.path
 import tempfile
 from typing import Optional
 
@@ -46,6 +47,7 @@ class QloadDriver:
     the driver is an interface to download a remote file locally. A driver corresponds to a storage system.
     """
 
+
     def download(self, path: str) -> str:
         """
         primitive pour télécharger le fichier en local. Une fois téléchargée, le chemin est retourné.
@@ -56,19 +58,27 @@ class QloadDriver:
         raise NotImplementedError
 
 
+    def isfile(self, path: str) -> bool:
+        """
+        primitive to check if a file exists
+        """
+        raise NotImplementedError
+
 class QloadDriverFile(QloadDriver):
+
 
     def download(self, path: str) -> str:
         """
         the driver which dialogues with the local filesystem does not need to download the file in order to be able to read its content.
-
-        :param path:
-        :return:
         """
         return path
 
+    def isfile(self, path: str) -> bool:
+        return os.path.isfile(path)
+
 
 class QloadDriverFtp(QloadDriver):
+
 
     def __init__(self, host: str = 'localhost', user: Optional[str] = None, passwd: Optional[str] = None, **kwargs):
         """
@@ -102,8 +112,18 @@ class QloadDriverFtp(QloadDriver):
 
         raise InvalidRemoteFile(path)
 
+    def isfile(self, path: str) -> bool:
+        """
+        Checks if a file exists on the ftp server
+
+        """
+        my_session_factory = ftputil.session.session_factory(**self.kwargs)
+
+        with ftputil.FTPHost(self.host, self.user, self.passwd, session_factory=my_session_factory) as host:
+            return host.path.isfile(path)
 
 class QloadDriverS3(QloadDriver):
+
 
     def __init__(self, bucket: str, endpoint_url: Optional[str] = None, region_name: Optional[str] = None, aws_access_key_id: Optional[str] = None, aws_secret_access_key: Optional[str] =  None, **kwargs):
         """
@@ -132,7 +152,7 @@ class QloadDriverS3(QloadDriver):
 
     def download(self, path: str) -> Optional[str]:
         """
-        QloadDriver3 loads a file from a s3 bucket into the system temporary files and
+        QloadDriverS3 loads a file from a s3 bucket into the system temporary files and
         returns the path to the downloaded file.
 
         :param path: s3 key of the file on the s3 bucket
@@ -150,3 +170,20 @@ class QloadDriverS3(QloadDriver):
         client.download_file(Bucket=self.bucket, Key=path, Filename=filepath)
         return filepath
 
+
+    def isfile(self, path: str) -> bool:
+        """
+        QloadDriverS3 checks if a file exists on the s3 bucket
+
+        >>> driver = QloadDriverS3(bucket='mybucket')
+        >>> driver.isfile(path='mykey')
+        """
+        from botocore.errorfactory import ClientError
+
+        client = boto3.client('s3', **self.kwargs)
+        _, filepath = tempfile.mkstemp()
+        try:
+            client.head_object(Bucket=self.bucket, Key=path)
+            return True
+        except ClientError:
+            return False

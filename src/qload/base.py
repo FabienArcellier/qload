@@ -22,6 +22,10 @@ class QloadEngine:
     def __init__(self, driver: 'QloadDriver' = None):
         self.driver = driver
 
+    def isfile(self, path: str, **kwargs) -> bool:
+        isfile = self.driver.isfile(path=path)
+        return isfile
+
     def csv(self, path: str, expression: Optional[str] = None, **kwargs) ->  Union[None, str, list, dict]:
         local_path = self.driver.download(path=path)
         content = []

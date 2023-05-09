@@ -8,5 +8,3 @@ services:
       - initialBuckets=bucket
       - root=/data
       - retainFilesOnExit=true
-    volumes:
-      - ./data:/data/bucket:cached
