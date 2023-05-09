@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qload"
-version = "1.0.0"
+version = "1.0.1"
 description = "python library to perform assertion on files"
 authors = ["Fabien Arcellier <fabien.arcellier@gmail.com>"]
 license = "MIT"
