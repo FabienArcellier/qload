@@ -7,7 +7,7 @@ def re_find_all(content: str, expression: str, flags: int = 0) -> Union[None, st
     """
     finds all occurrences of a regular expression in the content
 
-    >>> expression.re_find_all('hello world    ! world !', 'world[\s]*!')
+    >>> expression.re_find_all('hello world    ! world !', r'world[\s]*!')
     >>> ['world    !', 'world !']
 
     :param content:
